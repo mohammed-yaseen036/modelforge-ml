@@ -1,11 +1,13 @@
 // --- API HELPERS ---
+let apiBase = localStorage.getItem('vectaflow_api_base') || '';
+
 const api = {
     async get(url) {
-        const response = await fetch(url);
+        const response = await fetch(apiBase + url);
         return response.json();
     },
     async post(url, data) {
-        const response = await fetch(url, {
+        const response = await fetch(apiBase + url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -376,6 +378,13 @@ document.getElementById('btn-reset').addEventListener('click', async () => {
 });
 
 document.getElementById('btn-save-cfg').addEventListener('click', async () => {
+    const apiBaseInput = document.getElementById('cfg-apibase');
+    if (apiBaseInput) {
+        const newBase = apiBaseInput.value.trim();
+        localStorage.setItem('vectaflow_api_base', newBase);
+        apiBase = newBase;
+    }
+
     const config = {
         true_p_mid: parseFloat(document.getElementById('cfg-pmid').value),
         true_sensitivity: parseFloat(document.getElementById('cfg-sens').value),
@@ -420,6 +429,10 @@ document.getElementById('btn-mock-skip').addEventListener('click', async () => {
 
 window.addEventListener('DOMContentLoaded', async () => {
     initCharts();
+    const apiBaseInput = document.getElementById('cfg-apibase');
+    if (apiBaseInput) {
+        apiBaseInput.value = apiBase;
+    }
     await updateDashboard(true);
     appendLog("Vectaflow interface initialized. Dashboard metrics synced.", "SYSTEM");
 });
