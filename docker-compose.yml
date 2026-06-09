@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pricing-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vectaflow-pricing-engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

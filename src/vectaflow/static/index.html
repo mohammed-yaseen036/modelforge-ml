@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vectaflow.AI dynamic pricing and revenue yield engine powered by Thompson Sampling and Price Elasticity models.">
+    <title>Vectaflow.AI | Enterprise Revenue Yield & Elasticity Engine</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Stylesheet Link -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo-section">
+            <h1 id="app-title">VECTAFLOW</h1>
+            <span>Revenue Yield & Elasticity Engine</span>
+        </div>
+        <div class="day-counter">
+            <span class="day-indicator" id="day-indicator-dot"></span>
+            <span>Day: <strong id="current-day-text">0</strong> / 30</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <!-- Left Column: Operator Control Center & Analytics -->
+        <section class="operator-column">
+            
+            <!-- KPI Dashboard Section -->
+            <div class="kpi-grid">
+                <div class="glass-panel kpi-card" id="card-revenue">
+                    <span class="kpi-title">Cumulative Revenue</span>
+                    <span class="kpi-value" id="kpi-revenue">$0.00</span>
+                    <span class="kpi-change neutral" id="kpi-revenue-lift">No baseline comparison yet</span>
+                </div>
+                <div class="glass-panel kpi-card" id="card-conversion">
+                    <span class="kpi-title">Average Conversion</span>
+                    <span class="kpi-value" id="kpi-conversion">0.0%</span>
+                    <span class="kpi-change neutral" id="kpi-total-sales">0 sales total</span>
+                </div>
+                <div class="glass-panel kpi-card" id="card-price">
+                    <span class="kpi-title">Active Price Offered</span>
+                    <span class="kpi-value" id="kpi-active-price">$0.00</span>
+                    <span class="kpi-change neutral" id="kpi-competitor-price">Competitor: $0.00</span>
+                </div>
+                <div class="glass-panel kpi-card" id="card-inventory">
+                    <span class="kpi-title">Inventory Health</span>
+                    <span class="kpi-value" id="kpi-inventory">1,200</span>
+                    <span class="kpi-change neutral" id="kpi-inventory-pct">100% remaining</span>
+                </div>
+            </div>
+
+            <!-- Controls Console -->
+            <div class="glass-panel dashboard-controls">
+                <div class="control-buttons">
+                    <button class="btn-primary" id="btn-step">Step 1 Day</button>
+                    <button class="btn-primary" id="btn-run-all">Simulate Remaining Days</button>
+                    <button class="btn-reset" id="btn-reset">Reset Engine</button>
+                </div>
+                <div class="meta-info">
+                    Bandit Arms: <span id="arms-display">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Main Charts Layout -->
+            <div class="charts-grid">
+                
+                <!-- Cumulative Revenue Comparison Chart -->
+                <div class="glass-panel chart-span-2">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Revenue Accumulation vs Static Baselines</h3>
+                        <span class="chart-badge">Strategic Lift Metrics</span>
+                    </div>
+                    <div class="chart-container-large">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Price Action Timeline Chart -->
+                <div class="glass-panel">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Pricing Action Timeline</h3>
+                        <span class="chart-badge">Dynamic Tracking</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Elasticity & Demand Fitting Chart -->
+                <div class="glass-panel">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Price Elasticity & Demand Curve</h3>
+                        <span class="chart-badge">Fitted SGD Model</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bandit Probability Densities Chart -->
+                <div class="glass-panel chart-span-2">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Thompson Sampling Bandit Uncertainty Distributions</h3>
+                        <span class="chart-badge">Beta Distributions (Learning States)</span>
+                    </div>
+                    <div class="chart-container-medium">
+                        <canvas id="banditChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Simulated Storefront, Elasticity Recommender & Settings -->
+        <aside class="right-column">
+            
+            <!-- Simulated Storefront Mock -->
+            <div class="customer-mock-container" id="widget-storefront">
+                <div class="customer-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    Simulated Customer Portal
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">🎧</div>
+                    <div class="product-title">SonicFlow X200 Noise-Cancelling Headphones</div>
+                    <div class="product-rating">★ ★ ★ ★ ☆ (4.6 ratings)</div>
+                    <div class="product-price-display" id="store-price-text">$29.99</div>
+                </div>
+                
+                <!-- Floating Recommender Widget inside customer view -->
+                <div class="buyhatke-extension">
+                    <div class="buyhatke-title">
+                        <div class="buyhatke-logo">
+                            Vectaflow Widget <span class="buyhatke-logo-badge">Price Bot</span>
+                        </div>
+                        <span class="widget-version">BuyHatke Mock v1</span>
+                    </div>
+                    
+                    <div class="buyhatke-recommendation" id="buyhatke-rec-box">
+                        <span class="rec-lbl">Buying Signal</span>
+                        <strong id="buyhatke-signal-text">ANALYZING...</strong>
+                    </div>
+                    
+                    <div class="buyhatke-mini-chart-container">
+                        <canvas id="miniPriceChart"></canvas>
+                    </div>
+                    
+                    <div class="customer-interactive-section">
+                        <button class="btn-buy-now" id="btn-mock-buy">Simulate Customer Buy</button>
+                        <button class="btn-no-buy" id="btn-mock-skip">Simulate Click & Skip</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Elasticity Recommendation Panel -->
+            <div class="glass-panel recommend-panel" id="widget-recommendations">
+                <h3 class="chart-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Elasticity Recommendation
+                </h3>
+                <div class="recommendation-content" id="recommender-suggestion">
+                    Calculating pricing recommendations based on model convergence...
+                </div>
+            </div>
+
+            <!-- Configuration / Market Tuning Panel -->
+            <div class="glass-panel" id="widget-settings">
+                <h3 class="chart-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Market Configuration
+                </h3>
+                <div class="simulator-settings">
+                    <div class="setting-row">
+                        <span class="setting-label">Demand Midpoint Price (P_mid)</span>
+                        <input type="number" class="setting-input" id="cfg-pmid" value="32.0" step="0.5">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Customer Price Sensitivity</span>
+                        <input type="number" class="setting-input" id="cfg-sens" value="0.15" step="0.01">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Competitor Initial Price ($)</span>
+                        <input type="number" class="setting-input" id="cfg-compprice" value="35.0" step="0.5">
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">Initial Inventory</span>
+                        <input type="number" class="setting-input" id="cfg-inventory" value="1200">
+                    </div>
+                    <button class="btn-secondary" id="btn-save-cfg">Apply Settings & Reset</button>
+                </div>
+                <div class="widget-stats-info">
+                    <strong>Manual Widget Stats:</strong><br>
+                    Simulated Clicks: <span id="manual-clicks-text">0</span><br>
+                    Simulated Buys: <span id="manual-buys-text">0</span>
+                </div>
+            </div>
+
+            <!-- Real-Time Transaction Console -->
+            <div class="glass-panel console-panel" id="widget-console">
+                <h3 class="chart-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 12 13 18 7"></polyline><polyline points="12 5 18 5 18 11"></polyline></svg>
+                    Transaction Console Logs
+                </h3>
+                <div class="console-body" id="console-logs">
+                    [SYSTEM] Vectaflow Enterprise Engine online. Waiting for simulation step...
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast-notif">
+        <span class="toast-label">Notification:</span>
+        <span id="toast-message">Simulation step completed.</span>
+    </div>
+
+    <!-- Application Script Link -->
+    <script src="js/app.js"></script>
+</body>
+</html>
